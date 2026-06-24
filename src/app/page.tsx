@@ -1,65 +1,70 @@
-import Image from "next/image";
+import { playbook, railItems } from "@/content/playbook";
+import { ProgressRail } from "@/components/ui/ProgressRail";
+import { PartDivider } from "@/components/ui/PartDivider";
+import { LazySection } from "@/components/ui/LazySection";
+import { Hero } from "@/components/sections/Hero";
+import { IndexOverview } from "@/components/sections/IndexOverview";
+import { Section } from "@/components/sections/Section";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="relative">
+      <ProgressRail items={railItems} />
+
+      <Hero />
+
+      <IndexOverview />
+
+      {playbook.map((part, pi) => {
+        const inner = (
+          <>
+            {pi > 0 && (
+              <PartDivider
+                index={part.index}
+                title={part.title}
+                subtitle={part.subtitle}
+              />
+            )}
+            {part.sections.map((section) => (
+              <Section
+                key={section.id}
+                section={section}
+                part={`Part ${part.index} — ${part.title}`}
+              />
+            ))}
+          </>
+        );
+
+        // Eagerly render the first two parts; lazy-mount the rest. The part id
+        // stays on the outer wrapper so part-level anchors always resolve.
+        return pi < 2 ? (
+          <div key={part.id} id={part.id} data-part={`Part ${part.index}`}>
+            {inner}
+          </div>
+        ) : (
+          <LazySection
+            key={part.id}
+            id={part.id}
+            dataPart={`Part ${part.index}`}
+            minHeight={1400}
+          >
+            {inner}
+          </LazySection>
+        );
+      })}
+
+      <footer className="relative border-t border-white/10 px-6 py-20 text-center sm:px-10 lg:pl-[var(--rail-w)]">
+        <div className="mx-auto max-w-3xl">
+          <div className="eyebrow mb-4">The Agentic PDLC</div>
+          <p className="display-lg font-display text-fog-100">
+            AI generates. Humans decide.
+          </p>
+          <p className="body-base mx-auto mt-6 max-w-xl text-fog-400">
+            Execution is no longer the bottleneck. Judgment is. Build the context
+            layer, govern the gates, and let the loop compound.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </footer>
+    </main>
   );
 }

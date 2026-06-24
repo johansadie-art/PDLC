@@ -1,26 +1,270 @@
 @import "tailwindcss";
 
+/* ============================================================
+   AGENTIC PDLC — DARK / CINEMATIC DESIGN SYSTEM
+   ============================================================ */
+
+@theme {
+  /* Ink / background scale (near-black with a cool tint) */
+  --color-ink-950: #050509;
+  --color-ink-900: #0b0b14;
+  --color-ink-850: #101019;
+  --color-ink-800: #14141f;
+  --color-ink-700: #1c1c2b;
+  --color-ink-600: #2a2a3d;
+  --color-ink-500: #3a3a52;
+
+  /* Text greys */
+  --color-fog-100: #f4f4f8;
+  --color-fog-200: #d8d8e4;
+  --color-fog-300: #b4b4c6;
+  --color-fog-400: #8a8a9f;
+  --color-fog-500: #63637a;
+
+  /* Indigo accent (the playbook brand) */
+  --color-indigo-50: #f2f1ff;
+  --color-indigo-100: #e4e3ff;
+  --color-indigo-200: #c9c7ff;
+  --color-indigo-300: #a5a2ff;
+  --color-indigo-400: #8c89ff;
+  --color-indigo-500: #6c69ff;
+  --color-indigo-600: #5754f2;
+  --color-indigo-700: #4441d9;
+
+  /* Signal accents */
+  --color-success: #29d27e;
+  --color-warn: #ffb547;
+  --color-error: #ff5470;
+  --color-cyan: #45e0e0;
+
+  --font-sans: var(--font-poppins);
+  --font-display: var(--font-display);
+
+  --color-background: var(--color-ink-900);
+  --color-foreground: var(--color-fog-100);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-ink-900);
+  --foreground: var(--color-fog-100);
+  --rail-w: 64px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: auto; /* Lenis handles smoothing */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Hide custom cursor fallback on touch / coarse pointers */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
+::selection {
+  background: var(--color-indigo-500);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-600);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-indigo-600);
+}
+
+/* ============================================================
+   TYPOGRAPHY HELPERS
+   ============================================================ */
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.display-hero {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  font-size: clamp(2.75rem, 9vw, 9rem);
+}
+
+.display-xl {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-size: clamp(2.25rem, 6vw, 5rem);
+}
+
+.display-lg {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-indigo-300);
+}
+
+.body-lg {
+  font-size: clamp(1.05rem, 1.4vw, 1.4rem);
+  line-height: 1.6;
+  color: var(--color-fog-300);
+}
+
+.body-base {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--color-fog-300);
+}
+
+/* ============================================================
+   GLOW / GRADIENT / SURFACE UTILITIES
+   ============================================================ */
+
+.glass {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.045),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.glow-indigo {
+  box-shadow: 0 0 80px -20px rgba(108, 105, 255, 0.55);
+}
+
+.text-glow {
+  text-shadow: 0 0 36px rgba(108, 105, 255, 0.45);
+}
+
+.accent-gradient {
+  background: linear-gradient(
+    120deg,
+    var(--color-indigo-300),
+    var(--color-indigo-500) 45%,
+    var(--color-cyan) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.radial-fade {
+  background: radial-gradient(
+    closest-side,
+    rgba(108, 105, 255, 0.18),
+    transparent
+  );
+}
+
+.hairline {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Grain overlay */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* ============================================================
+   ANIMATION PRIMITIVES (for non-GSAP reveals)
+   ============================================================ */
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 40s linear infinite;
+}
+
+/* Reveal defaults used by useScrollAnimation when reduced-motion is on */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    cursor: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
